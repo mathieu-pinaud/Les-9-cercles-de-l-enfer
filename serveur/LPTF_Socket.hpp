@@ -6,6 +6,7 @@
 class LPTF_Socket {
 private:
     int sockfd;
+    const std::string ipAddr;
 
 public:
     LPTF_Socket();
@@ -16,7 +17,7 @@ public:
     bool sendMessage(const char* message);
     std::string receiveMessage();
     void displayServerAddress();
-    // Ajoutez d'autres méthodes nécessaires ici
+    std::string getIpAddr() const { return ipAddr; };
 };
 
 #endif // LPTF_SOCKET_HPP

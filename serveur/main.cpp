@@ -24,7 +24,7 @@ void handleClientCommunication(LPTF_Socket& client, std::vector<LPTF_Socket>& cl
 }
 
 // Fonction pour gérer l'acceptation des connexions clientes
-void handleClientConnections(LPTF_Socket& serverSocket) {
+void handleClientConnections(LPTF_Socket& serverSocket, int port) {
     std::vector<LPTF_Socket> clients;
 
     while (true) {
@@ -33,11 +33,7 @@ void handleClientConnections(LPTF_Socket& serverSocket) {
             std::cout << "Connexion acceptée." << std::endl;
             clients.emplace_back();
             LPTF_Socket& client = clients.back();
-            if (!client.connectTo("127.0.0.1", 12345)) { // Remplacer les paramètres d'adresse et de port par les valeurs appropriées
-                std::cerr << "Erreur lors de la connexion du client." << std::endl;
-                continue;
-            }
-            for (auto& otherClient : clients) {
+            for (LPTF_Socket& otherClient : clients) {
                 if (&otherClient != &client) {
                     if (!otherClient.sendMessage("Un nouveau client s'est connecté.")) {
                         std::cerr << "Erreur lors de l'envoi du message à un client." << std::endl;
@@ -52,16 +48,34 @@ void handleClientConnections(LPTF_Socket& serverSocket) {
     }
 }
 
-int main() {
-    LPTF_Socket serverSocket;
-    if (serverSocket.bindAndListen(12345)) {
-        std::cout << "Serveur en attente de connexions entrantes." << std::endl;
+int checkArguments(int ac, char* av[]) {
+    if (ac != 2) {
+        std::cerr << "Usage: " << av[0] << " <port>" << std::endl;
+        return false;
+    }
+    int port = -1;
+    try {
+        port = std::stoi(av[1]);
+    } catch (const std::exception& e) {
+        std::cerr << "Le port doit être un entier." << std::endl;
+        return false;
+    }
+    if (port < 1024 || port > 49151) {
+        std::cerr << "Le port doit être compris entre 1024 et 49151." << std::endl;
+        return false;
+    }
+    return port;
+}
 
-        handleClientConnections(serverSocket);
+int main(int ac, char* av[]) {
+    int port = checkArguments(ac, av);
+    LPTF_Socket serverSocket;
+    if (serverSocket.bindAndListen(port)) {
+        std::cout << "Serveur en attente de connexions entrantes." << std::endl;
+        handleClientConnections(serverSocket, port);
     } else {
         std::cerr << "Erreur lors de la liaison et de l'écoute." << std::endl;
         return 1;
     }
-
     return 0;
 }
