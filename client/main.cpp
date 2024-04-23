@@ -4,7 +4,7 @@
 
 int main() {
     LPTF_Socket clientSocket;
-    if (clientSocket.connectTo("127.0.0.1", 12345)) { // Remplacer les paramètres d'adresse et de port par les valeurs appropriées
+    if (clientSocket.connectTo("10.10.3.4", 12345)) { // Remplacer les paramètres d'adresse et de port par les valeurs appropriées
         std::cout << "Connecté au serveur." << std::endl;
 
         while (true) {

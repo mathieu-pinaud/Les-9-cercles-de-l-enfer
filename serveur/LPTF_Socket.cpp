@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
+#include <netdb.h>
 
 LPTF_Socket::LPTF_Socket() : sockfd(socket(AF_INET, SOCK_STREAM, 0)) {
     if (sockfd < 0) {
@@ -47,7 +48,17 @@ bool LPTF_Socket::bindAndListen(int port) {
         return false;
     }
 
+    displayServerAddress();
     return true;
+}
+
+void LPTF_Socket::displayServerAddress() {
+    char hostname[128];
+    gethostname(hostname, sizeof(hostname));
+    struct hostent* host_entry = gethostbyname(hostname);
+    char* ip = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
+
+    std::cout << "Adresse IP du serveur : " << ip << std::endl;
 }
 
 int LPTF_Socket::acceptConnection() {

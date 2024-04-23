@@ -15,6 +15,7 @@ public:
     int acceptConnection();
     bool sendMessage(const char* message);
     std::string receiveMessage();
+    void displayServerAddress();
     // Ajoutez d'autres méthodes nécessaires ici
 };
 
