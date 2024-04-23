@@ -6,7 +6,7 @@
 class LPTF_Socket {
 private:
     int sockfd;
-    const std::string ipAddr;
+    std::string ipAddr;
 
 public:
     LPTF_Socket();

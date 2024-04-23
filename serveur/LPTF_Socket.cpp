@@ -57,7 +57,7 @@ void LPTF_Socket::displayServerAddress() {
     gethostname(hostname, sizeof(hostname));
     struct hostent* host_entry = gethostbyname(hostname);
     char* ip = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
-    this->ipAddr = ip;
+    this->ipAddr = std::string(ip);
     std::cout << "Adresse IP du serveur : " << ip << std::endl;
 }
 
