@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <vector>
+#include <algorithm>
 
 class LPTF_Socket {
 private:

@@ -89,6 +89,15 @@ void LPTF_Socket::handleNewConnection(fd_set& readfds) {
     }
 }
 
+void LPTF_Socket::removeClient(int clientSocket) {
+    close(clientSocket);
+    auto it = std::find(clientSockets.begin(), clientSockets.end(), clientSocket);
+        clientSockets.erase(it);
+    if (it != clientSockets.end()) {
+         clientSockets.erase(it);
+    }
+}
+
 void LPTF_Socket::handleClientCommunication(int clientSocket) {
     char buffer[2040];
     int bytesReceived = recv(clientSocket, buffer, 2040, 0);
