@@ -11,6 +11,7 @@ bool LPTF_Socket::initClient(const char* server_ip) {
         perror("Invalid address/ Address not supported");
         return false;
     }
+    std::cout << socket_fd << (struct sockaddr *)&address << std::endl;
     if (connect(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("connection failed");
         return false;
