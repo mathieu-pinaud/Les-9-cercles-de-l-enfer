@@ -21,6 +21,7 @@ private:
     struct sockaddr_in address;
     std::vector<int> clientSockets;
     int port;
+    in_addr_t ipAddr;
 
 
 public:

@@ -23,8 +23,9 @@ bool LPTF_Socket::initServer() {
         perror("socket creation failed");
         return false;
     }
+    displayServerAddress();
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_addr.s_addr = ipAddr;
     address.sin_port = htons(port);    
     if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("bind failed");
@@ -73,7 +74,7 @@ void LPTF_Socket::displayServerAddress() {
     gethostname(hostname, sizeof(hostname));
     struct hostent* host_entry = gethostbyname(hostname);
     char* ip = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
-    this->ipAddr = std::string(ip);
+    ipAddr = inet_addr(ip);
     std::cout << "Adresse IP du serveur : " << ip << std::endl;
 }
 
