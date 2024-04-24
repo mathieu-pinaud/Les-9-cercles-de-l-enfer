@@ -17,7 +17,6 @@
 class LPTF_Socket {
 private:
     int socket_fd;
-    std::string ipAddr;
     struct sockaddr_in address;
     std::vector<int> clientSockets;
     int port;
@@ -25,7 +24,7 @@ private:
 
 
 public:
-    LPTF_Socket(int port) : socket_fd(-1) {}
+    LPTF_Socket(int port) : socket_fd(-1) {};
     bool initClient(const char* server_ip);
     bool initServer();
     int acceptConnection();
@@ -33,13 +32,13 @@ public:
     ssize_t receive(char* buffer, int buffer_size);
     void closeSocket();
     void displayServerAddress();
-    std::string getIpAddr() const { return ipAddr; }
-    std::vector<int> getClientSockets() const { return clientSockets; }
-    void addClient(int clientSocket) { clientSockets.push_back(clientSocket); }
+    in_addr_t getIpAddr() const { return ipAddr; };
+    std::vector<int> getClientSockets() const { return clientSockets; };
+    void addClient(int clientSocket) { clientSockets.push_back(clientSocket); };
     void removeClient(int clientSocket);
-    void clearClientSockets() { clientSockets.clear(); }
-    int getSocket() const { return socket_fd; }
-    int getPort() const { return port; }
+    void clearClientSockets() { clientSockets.clear(); };
+    int getSocket() const { return socket_fd; };
+    int getPort() const { return port; };
     void launchServer();
     void launchClient(const char* server_ip);
     void handleNewConnection(fd_set& readfds);
