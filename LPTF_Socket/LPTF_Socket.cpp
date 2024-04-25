@@ -43,7 +43,7 @@ int LPTF_Socket::acceptConnection() {
     int addrlen = sizeof(address);
     int new_socket;
     if ((new_socket = accept(socket_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
-        perror("accept");
+        std::cout << "error accepting connection" << std::endl;
         return -1;
     }
     return new_socket;
