@@ -26,7 +26,7 @@ bool LPTF_Socket::initServer() {
     }
     displayServerAddress();
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = ipAddr;
+    address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);    
     if (bind(socket_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("bind failed");
@@ -36,7 +36,6 @@ bool LPTF_Socket::initServer() {
         perror("listen");
         return false;
     }
-    displayServerAddress();
     return true;
 }
 

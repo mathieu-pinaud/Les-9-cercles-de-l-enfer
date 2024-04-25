@@ -5,18 +5,18 @@
 int checkArgs(int ac, char* av[]) {
     if (ac != 3) {
         std::cerr << "Usage: " << av[0] << " <ip> <port>" << std::endl;
-        return false;
+        return -1;
     }
     int port = -1;
     try {
         port = std::stoi(av[2]);
     } catch (const std::exception& e) {
         std::cerr << "Le port doit être un entier." << std::endl;
-        return false;
+        return -1;
     }
     if (port < 1024 || port > 49151) {
         std::cerr << "Le port doit être compris entre 1024 et 49151." << std::endl;
-        return false;
+        return -1;
     }
     return port;
 }
