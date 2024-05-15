@@ -1,4 +1,38 @@
 #include "LPTF_Socket.hpp"
+#include <poll.h>
+
+bool LPTF_Socket::launchClient() {
+    struct pollfd fds[2];
+    fds[0].fd = STDIN_FILENO;
+    fds[0].events = POLLIN;
+    fds[1].fd = socket_fd;
+    fds[1].events = POLLIN;
+
+    while (true) {
+        int ret = poll(fds, 2, -1);
+        if (ret > 0) {
+            if (fds[0].revents & POLLIN) {
+                std::string message;
+                std::getline(std::cin, message);
+                if (message == "stop") {
+                    std::cout << "Closing connection..." << std::endl;
+                    break;
+                }
+                if (!send(socket_fd, message.c_str())) {
+                    std::cerr << "Error sending message to server." << std::endl;
+                    return false;
+                }
+            }
+            if (fds[1].revents & POLLIN) {
+                std::string response = receiveClient();
+                if (!response.empty()) {
+                    std::cout << "Server response: " << response << std::endl;
+                }
+            }
+        }
+    }
+    return true;
+}
 
 bool LPTF_Socket::initClient(const char* server_ip) {
     if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -16,7 +50,9 @@ bool LPTF_Socket::initClient(const char* server_ip) {
         perror("connection failed");
         return false;
     }
-    return true;
+    std::cout << "Connected to server." << std::endl;
+    return launchClient();
+
 }
 
 bool LPTF_Socket::initServer() {
@@ -55,14 +91,6 @@ bool LPTF_Socket::send(int socket_fd, const char* data) {
         return false;
     }
     return true;
-}
-
-ssize_t LPTF_Socket::receive(char* buffer, int buffer_size) {
-    ssize_t valread;
-    if ((valread = read(socket_fd, buffer, buffer_size)) < 0) {
-        perror("read");
-    }
-    return valread;
 }
 
 void LPTF_Socket::closeSocket() {
@@ -114,10 +142,9 @@ void LPTF_Socket::handleClientCommunication(int clientSocket) {
         buffer[bytesReceived] = '\0';
         std::cout << "Received from client " << clientSocket
         << ": " << buffer << std::endl;
-        std::string response = "Message received successfully!";
-        for (int clientSocket : clientSockets) {
-            if (clientSocket != clientSocket) {
-                send(clientSocket, response.c_str());
+        for (int otherClientSocket : clientSockets) {
+            if (otherClientSocket != clientSocket) {
+                send(otherClientSocket, buffer);
             }
         }
     }
@@ -141,7 +168,24 @@ void LPTF_Socket::launchServer() {
         }
         handleNewConnection(readfds);
         for (int clientSocket : clientSockets) {
-            handleClientCommunication(clientSocket);
+            if (FD_ISSET(clientSocket, &readfds)) {
+                handleClientCommunication(clientSocket);
+            }
         }
     }
+}
+
+std::string LPTF_Socket::receiveClient() {
+    char buffer[2040];
+    int bytesReceived = recv(socket_fd, buffer, 2040, 0);
+    if (bytesReceived <= 0) {
+        if (bytesReceived == 0) {
+            std::cout << "Server disconnected." << std::endl;
+        } else {
+            perror("recv");
+        }
+        return "";
+    }
+    buffer[bytesReceived] = '\0';
+    return std::string(buffer);
 }

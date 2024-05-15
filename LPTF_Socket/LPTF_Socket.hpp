@@ -24,7 +24,7 @@ private:
 
 
 public:
-    LPTF_Socket(int port) : socket_fd(-1) {};
+    LPTF_Socket(int port) : socket_fd(-1), port(port) {};
     bool initClient(const char* server_ip);
     bool initServer();
     int acceptConnection();
@@ -40,9 +40,10 @@ public:
     int getSocket() const { return socket_fd; };
     int getPort() const { return port; };
     void launchServer();
-    void launchClient(const char* server_ip);
+    bool launchClient();
     void handleNewConnection(fd_set& readfds);
     void handleClientCommunication(int clientSocket);
+    std::string receiveClient();
 };
 
 #endif // LPTF_SOCKET_HPP

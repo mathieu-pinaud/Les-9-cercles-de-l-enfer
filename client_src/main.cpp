@@ -29,20 +29,7 @@ int main(int argc, char* av[]){
     }
     LPTF_Socket clientSocket(port);
     if (clientSocket.initClient(av[1])) {
-        std::cout << "Connecté au serveur." << std::endl;
-
-        while (true) {
-            std::string message;
-            std::getline(std::cin, message);
-            if (message == "stop") {
-                std::cout << "Fermeture de la connexion..." << std::endl;
-                break;
-            }
-            if (!clientSocket.send(clientSocket.getSocket(), message.c_str())) {
-                std::cerr << "Erreur lors de l'envoi du message au serveur." << std::endl;
-                break;
-            }
-        }
+        clientSocket.closeSocket();
     } else {
         std::cerr << "Échec de la connexion au serveur." << std::endl;
         return 1;
