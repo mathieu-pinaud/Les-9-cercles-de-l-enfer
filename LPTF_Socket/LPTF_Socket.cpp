@@ -1,17 +1,17 @@
 #include "LPTF_Socket.hpp"
-#include <poll.h>
 
 bool LPTF_Socket::launchClient() {
-    struct pollfd fds[2];
-    fds[0].fd = STDIN_FILENO;
-    fds[0].events = POLLIN;
-    fds[1].fd = socket_fd;
-    fds[1].events = POLLIN;
+    fd_set readfds;
+    int max_fd = std::max(STDIN_FILENO, socket_fd) + 1;
 
     while (true) {
-        int ret = poll(fds, 2, -1);
+        FD_ZERO(&readfds);
+        FD_SET(STDIN_FILENO, &readfds);
+        FD_SET(socket_fd, &readfds);
+
+        int ret = select(max_fd, &readfds, NULL, NULL, NULL);
         if (ret > 0) {
-            if (fds[0].revents & POLLIN) {
+            if (FD_ISSET(STDIN_FILENO, &readfds)) {
                 std::string message;
                 std::getline(std::cin, message);
                 if (message == "stop") {
@@ -23,10 +23,10 @@ bool LPTF_Socket::launchClient() {
                     return false;
                 }
             }
-            if (fds[1].revents & POLLIN) {
+            if (FD_ISSET(socket_fd, &readfds)) {
                 std::string response = receiveClient();
                 if (!response.empty()) {
-                    std::cout << "Server response: " << response << std::endl;
+                    std::cout << std::endl << "Server response: " << response << std::endl;
                 }
             }
         }
