@@ -98,12 +98,28 @@ void LPTF_Socket::closeSocket() {
 }
 
 void LPTF_Socket::displayServerAddress() {
-    char hostname[128];
-    gethostname(hostname, sizeof(hostname));
-    struct hostent* host_entry = gethostbyname(hostname);
-    char* ip = inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0]));
-    ipAddr = inet_addr(ip);
-    std::cout << "Adresse IP du serveur : " << ip << std::endl;
+    struct ifaddrs *ifAddrStruct = NULL;
+    struct ifaddrs *ifa = NULL;
+    void *tmpAddrPtr = NULL;
+
+    getifaddrs(&ifAddrStruct);
+
+    for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+        if (!ifa->ifa_addr) {
+            continue;
+        }
+        // check it is IP4 and not a loopback address
+        if (ifa->ifa_addr->sa_family == AF_INET && strcmp(ifa->ifa_name, "lo") != 0) { 
+            tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+            char addressBuffer[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+            std::cout << "Adresse IP du serveur : " << addressBuffer << std::endl;
+            break;
+        }
+    }
+    if (ifAddrStruct != NULL) {
+        freeifaddrs(ifAddrStruct);
+    }
 }
 
 void LPTF_Socket::handleNewConnection(fd_set& readfds) {

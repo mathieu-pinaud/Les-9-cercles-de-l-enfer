@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <vector>
+#include <ifaddrs.h>
 #include <algorithm>
 
 class LPTF_Socket {
