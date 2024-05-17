@@ -43,16 +43,6 @@ public:
     bool send(int clientSocket_fd, const char* data);
     void closeSocket();
     void displayServerAddress();
-<<<<<<< HEAD
-    #ifdef _WIN32
-        WSADATA getIpAddr() const { return ipAddr; };
-    #elif __linux__
-        in_addr_t getIpAddr() const { return ipAddr; };
-    #endif
-    std::vector<int> getClientSockets() const { return clientSockets; };
-    void addClient(int clientSocket) { clientSockets.push_back(clientSocket); };
-=======
->>>>>>> 5554ce32b4f0a48a858e1b9775b6b0b50f5b0c03
     void removeClient(int clientSocket);
     void launchServer();
     bool launchClient();
