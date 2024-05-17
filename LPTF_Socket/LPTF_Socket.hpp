@@ -29,16 +29,9 @@ public:
     bool initServer();
     int acceptConnection();
     bool send(int clientSocket_fd, const char* data);
-    ssize_t receive(char* buffer, int buffer_size);
     void closeSocket();
     void displayServerAddress();
-    in_addr_t getIpAddr() const { return ipAddr; };
-    std::vector<int> getClientSockets() const { return clientSockets; };
-    void addClient(int clientSocket) { clientSockets.push_back(clientSocket); };
     void removeClient(int clientSocket);
-    void clearClientSockets() { clientSockets.clear(); };
-    int getSocket() const { return socket_fd; };
-    int getPort() const { return port; };
     void launchServer();
     bool launchClient();
     void handleNewConnection(fd_set& readfds);
