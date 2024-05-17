@@ -36,14 +36,14 @@ private:
     #endif
 
 public:
-    LPTF_Socket(int port) : socket_fd(-1) {};
+    LPTF_Socket(int port) : socket_fd(-1), port(port) {};
     bool initClient(const char* server_ip);
     bool initServer();
     int acceptConnection();
     bool send(int clientSocket_fd, const char* data);
-    ssize_t receive(char* buffer, int buffer_size);
     void closeSocket();
     void displayServerAddress();
+<<<<<<< HEAD
     #ifdef _WIN32
         WSADATA getIpAddr() const { return ipAddr; };
     #elif __linux__
@@ -51,14 +51,14 @@ public:
     #endif
     std::vector<int> getClientSockets() const { return clientSockets; };
     void addClient(int clientSocket) { clientSockets.push_back(clientSocket); };
+=======
+>>>>>>> 5554ce32b4f0a48a858e1b9775b6b0b50f5b0c03
     void removeClient(int clientSocket);
-    void clearClientSockets() { clientSockets.clear(); };
-    int getSocket() const { return socket_fd; };
-    int getPort() const { return port; };
     void launchServer();
-    void launchClient(const char* server_ip);
+    bool launchClient();
     void handleNewConnection(fd_set& readfds);
     void handleClientCommunication(int clientSocket);
+    std::string receiveClient();
 };
 
 #endif // LPTF_SOCKET_HPP
