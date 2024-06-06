@@ -2,8 +2,8 @@ CC = g++
 CFLAGS = -g3 -Wall -Wextra -Werror
 NAME_SERVER = server
 NAME_CLIENT = client
-SRC_SERVER = server_src/main.cpp LPTF_Socket/LPTF_Socket.cpp
-SRC_CLIENT = client_src/main.cpp LPTF_Socket/LPTF_Socket.cpp
+SRC_CLIENT = client_src/main.cpp LPTF_Socket/LPTF_Socket.cpp LPTF_Socket/socket_Client/socket_Client.cpp 
+SRC_SERVER = server_src/main.cpp LPTF_Socket/LPTF_Socket.cpp LPTF_Socket/socket_Server/socket_Server.cpp
 OBJ_SERVER = $(SRC_SERVER:.cpp=.o)
 OBJ_CLIENT = $(SRC_CLIENT:.cpp=.o)
 

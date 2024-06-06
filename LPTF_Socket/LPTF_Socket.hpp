@@ -2,18 +2,11 @@
 #define LPTF_SOCKET_HPP
 
 
-#ifdef _WIN32
-    #include <winsock2.h>
-    #include <ws2tcpip.h>
-#elif __linux__
-    #include <sys/socket.h>
-    #include <netinet/in.h>
-    #include <arpa/inet.h>
-    #include <netdb.h>
-#else
-    #error "OS not supported"
-#endif
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 #include <string>
 #include <iostream>
 #include <cstring>
@@ -30,26 +23,32 @@ private:
     struct sockaddr_in address;
     std::vector<int> clientSockets;
     int port;
-    #ifdef _WIN32
-        WSADATA ipAddr;
-    #elif __linux__
-        in_addr_t ipAddr;
-    #endif
 
 public:
     LPTF_Socket(int port) : socket_fd(-1), port(port) {};
-    bool initClient(const char* server_ip);
-    bool initServer();
-    int acceptConnection();
+    
+
+    void addClientSocket(int clientSocket) { clientSockets.push_back(clientSocket); }
+    std::vector<int> getClientSockets() { return clientSockets; }
+
     bool send(int clientSocket_fd, const char* data);
     void closeSocket();
-    void displayServerAddress();
-    void removeClient(int clientSocket);
-    void launchServer();
-    bool launchClient();
-    void handleNewConnection(fd_set& readfds);
-    void handleClientCommunication(int clientSocket);
-    std::string receiveClient();
+    std::string receiveMessage();
+
+    int getSockFd() const { return socket_fd; }
+    void setSockFd(const int sock_fd) { socket_fd = sock_fd; }
+    struct sockaddr_in& getAddress() { return address; }
+    struct sockaddr_in* testGetAddress() { return &address; }
+    void setAddress(struct sockaddr_in adr) { address = adr; }
+    int getPort() const { return port; }
+    void setPort(const int portIn) { port = portIn; }
+    void setAddressFamily(int family) { address.sin_family = family; }
+    void setAddressPort(int port) { address.sin_port = port; }
+    void setAddressAdr(in_addr_t adress) { address.sin_addr.s_addr = adress; }
+    bool setAddressIp(const char* ip) { return inet_pton(AF_INET, ip, &address.sin_addr) > 0; }
+    const char* getAddressIp() {static char ip[INET_ADDRSTRLEN];return inet_ntop(AF_INET, &(address.sin_addr), ip, INET_ADDRSTRLEN);}
+    int getAddressPort() { return ntohs(address.sin_port); }
+   
 };
 
 #endif // LPTF_SOCKET_HPP

@@ -1,3 +1,4 @@
+#include "../LPTF_Socket/socket_Client/socket_Client.hpp"
 #include "../LPTF_Socket/LPTF_Socket.hpp"
 #include <iostream>
 #include <cstring> // Pour std::strlen
@@ -27,7 +28,7 @@ int main(int argc, char* av[]){
     if (port == -1) {
         return 1;
     }
-    LPTF_Socket clientSocket(port);
+    socket_Client clientSocket(port);
     if (clientSocket.initClient(av[1])) {
         clientSocket.closeSocket();
     } else {
