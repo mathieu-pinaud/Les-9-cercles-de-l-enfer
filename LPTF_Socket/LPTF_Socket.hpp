@@ -3,6 +3,7 @@
 
 
 
+#include "../LPTF_Packet/LPTF_Packet.hpp"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -31,9 +32,9 @@ public:
     void addClientSocket(int clientSocket) { clientSockets.push_back(clientSocket); }
     std::vector<int> getClientSockets() { return clientSockets; }
 
-    bool send(int clientSocket_fd, const char* data);
+    bool send(int clientSocket_fd, const LPTF_Packet packet);
     void closeSocket();
-    std::string receiveMessage();
+    LPTF_Packet receivePacket();
 
     int getSockFd() const { return socket_fd; }
     void setSockFd(const int sock_fd) { socket_fd = sock_fd; }

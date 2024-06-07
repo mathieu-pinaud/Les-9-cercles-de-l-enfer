@@ -1,7 +1,8 @@
 #include "LPTF_Socket.hpp"
 
-bool LPTF_Socket::send(int socket_fd, const char* data) {
-    if (::send(socket_fd, data, strlen(data), 0) < 0) {
+bool LPTF_Socket::send(int socket_fd, LPTF_Packet packet) {
+    std::vector<uint8_t> bytes = packet.toBytes();
+    if (::send(socket_fd, bytes.data() , bytes.size(), 0) <0) {
         perror("send");
         return false;
     }
@@ -12,12 +13,13 @@ void LPTF_Socket::closeSocket() {
     close(socket_fd);
 }
 
-std::string LPTF_Socket::receiveMessage() {
+LPTF_Packet LPTF_Socket::receivePacket() {
     char buffer[2040];
     int bytesReceived = recv(socket_fd, buffer, 2040, 0);
     if (bytesReceived <= 0) {
         if (bytesReceived == 0) {
             std::cout << "Server disconnected." << std::endl;
+            exit(0);
         } else {
             perror("recv");
         }
