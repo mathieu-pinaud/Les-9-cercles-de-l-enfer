@@ -46,7 +46,7 @@ bool socket_Client::initClient(const char* server_ip) {
         perror("Invalid address/ Address not supported");
         return false;
     }
-    std::cout << "Attempting to connect to " << getAddressIp() << ":" << ntohs(getAddressPort()) << std::endl;
+    std::cout << "Attempting to connect to " << getAddressIp() << ":" << getAddressPort() << std::endl;
     if (connect(getSockFd(), (struct sockaddr *)&getAddress(), sizeof(struct sockaddr_in)) < 0) {
     perror("connection failed");
     return false;
