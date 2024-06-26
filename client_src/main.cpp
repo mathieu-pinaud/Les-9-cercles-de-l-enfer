@@ -1,5 +1,6 @@
 #include "../LPTF_Socket/socket_Client/socket_Client.hpp"
 #include "../LPTF_Socket/LPTF_Socket.hpp"
+#include "../window/window.hpp"
 #include <iostream>
 #include <cstring> // Pour std::strlen
 
@@ -24,6 +25,9 @@ int checkArgs(int ac, char* av[]) {
 
 
 int main(int argc, char* av[]){
+
+    WindowQT windowQT;
+    windowQT.windows(argc, av);
     int port = checkArgs(argc, av);
     if (port == -1) {
         return 1;
