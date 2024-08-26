@@ -9,6 +9,7 @@ class socket_Client : public LPTF_Socket {
         socket_Client(int port) : LPTF_Socket(port) {};
         bool initClient(const char* server_ip);
         bool launchClient();
+        bool receive(int sockfd, LPTF_Packet& packet);
 };
 
 #endif

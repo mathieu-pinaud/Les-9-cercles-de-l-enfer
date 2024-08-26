@@ -6,19 +6,19 @@
 #include <iostream>
 
 class LPTF_Packet {
-    private : 
+    private :
         uint8_t packetType;
-        uint32_t dataSize;
         std::vector<uint8_t> data;
+        uint32_t dataSize; 
     public :
         LPTF_Packet(uint8_t packetType, std::vector<uint8_t> data) : packetType(packetType), data(data), dataSize(data.size()) {}
         LPTF_Packet(uint8_t packetType, const char* data) : packetType(packetType) {setDataFromStr(data);}
         std::vector<uint8_t> toBytes();
         LPTF_Packet fromBytes(std::vector<uint8_t> bytes);
 
-        const uint8_t getPacketType() { return packetType; }
-        const uint32_t getDataSize() { return dataSize; }
-        const std::vector<uint8_t> getData() { return data; }
+        uint8_t getPacketType() { return packetType; }
+        uint32_t getDataSize() { return dataSize; }
+        std::vector<uint8_t> getData() { return data; }
         void setPacketType(const uint8_t packetType) { this->packetType = packetType; }
         void setDataSize(const uint32_t dataSize) { this->dataSize = dataSize; }
         void setData(const std::vector<uint8_t> data) { this->data = data; }

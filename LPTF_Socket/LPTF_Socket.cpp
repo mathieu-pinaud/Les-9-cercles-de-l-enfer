@@ -23,8 +23,8 @@ LPTF_Packet LPTF_Socket::receivePacket() {
         } else {
             perror("recv");
         }
-        return "";
+        return LPTF_Packet(0, std::vector<uint8_t>());
     }
     buffer[bytesReceived] = '\0';
-    return std::string(buffer);
+    return LPTF_Packet(0, buffer);
 }

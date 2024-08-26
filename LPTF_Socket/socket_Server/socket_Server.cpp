@@ -91,11 +91,12 @@ void socket_Server::handleClientCommunication(int clientSocket) {
         removeClient(clientSocket);
     } else {
         buffer[bytesReceived] = '\0';
+        LPTF_Packet packet = LPTF_Packet(0, buffer);
         std::cout << "Received from client " << clientSocket
         << ": " << buffer << std::endl;
         for (int otherClientSocket : getClientSockets()) {
             if (otherClientSocket != clientSocket) {
-                send(otherClientSocket, buffer);
+                send(otherClientSocket, packet);
             }
         }
     }

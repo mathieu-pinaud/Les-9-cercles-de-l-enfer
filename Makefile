@@ -1,16 +1,18 @@
+# Variables
 CC = g++
 CFLAGS = -g3 -Wall -Wextra -Werror
+
 NAME_SERVER = server
 NAME_CLIENT = client
-SRC_CLIENT = client_src/main.cpp LPTF_Socket/LPTF_Socket.cpp LPTF_Socket/socket_Client/socket_Client.cpp 
-SRC_SERVER = server_src/main.cpp LPTF_Socket/LPTF_Socket.cpp LPTF_Socket/socket_Server/socket_Server.cpp
+
+SRC_SERVER = server_src/main.cpp LPTF_Socket/LPTF_Socket.cpp LPTF_Socket/socket_Server/socket_Server.cpp LPTF_Packet/LPTF_Packet.cpp
+SRC_CLIENT = client_src/main.cpp LPTF_Socket/LPTF_Socket.cpp LPTF_Socket/socket_Client/socket_Client.cpp LPTF_Packet/LPTF_Packet.cpp
+
 OBJ_SERVER = $(SRC_SERVER:.cpp=.o)
 OBJ_CLIENT = $(SRC_CLIENT:.cpp=.o)
 
+# Règles
 all: $(NAME_SERVER) $(NAME_CLIENT)
-
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME_SERVER): $(OBJ_SERVER)
 	$(CC) $(CFLAGS) -o ./$(NAME_SERVER) $(OBJ_SERVER)
